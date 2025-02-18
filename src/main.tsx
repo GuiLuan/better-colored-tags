@@ -2,7 +2,6 @@ import { App, Plugin, PluginSettingTab } from "obsidian";
 import { StrictMode } from "react";
 import { Root, createRoot } from "react-dom/client";
 
-import { AppContext } from "ctx";
 import SettingPage, { SettingDataType } from "ui/pages/SettingPage";
 import styleChanger from "core/styleChanger";
 
@@ -12,20 +11,22 @@ const DEFAULT_SETTINGS: SettingDataType = {
 
 export default class BCT extends Plugin {
   async onload() {
-    this.app.workspace.on("quick-preview", async () => {
-      const { maps } = await this.loadSettings();
-      styleChanger(this.app.workspace.containerEl, maps);
-    });
-
-    this.app.workspace.on("file-open", async () => {
-      const { maps } = await this.loadSettings();
-      styleChanger(this.app.workspace.containerEl, maps);
-    });
+    this.app.workspace.on("quick-preview", () =>
+      this.handleStyleChange(this.app.workspace.containerEl)
+    );
+    this.app.workspace.on("file-open", () =>
+      this.handleStyleChange(this.app.workspace.containerEl)
+    );
 
     this.addSettingTab(new BCTSettingTab(this.app, this));
   }
 
   async onunload() {}
+
+  private handleStyleChange = async (container: HTMLElement) => {
+    const { maps } = await this.loadSettings();
+    styleChanger(container, maps);
+  };
 
   loadSettings = async () => {
     return Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -52,17 +53,16 @@ class BCTSettingTab extends PluginSettingTab {
 
     this.root.render(
       <StrictMode>
-        <AppContext.Provider value={this.app}>
-          <SettingPage
-            readSetting={this.plugin.loadSettings}
-            writeSetting={this.plugin.saveSettings}
-          />
-        </AppContext.Provider>
+        <SettingPage
+          readSetting={this.plugin.loadSettings}
+          writeSetting={this.plugin.saveSettings}
+        />
       </StrictMode>
     );
   }
 
   hide(): void {
     this.root?.unmount();
+    this.root = null; // 显式置空防止内存泄漏
   }
 }
