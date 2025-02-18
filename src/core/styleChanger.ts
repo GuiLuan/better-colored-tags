@@ -7,6 +7,42 @@ type StyleMapping = {
 };
 
 const REMOVE_BUTTON_CLASS = "multi-select-pill-remove-button";
+const HOVER_OPACITY = 0.05; // 悬停高亮透明度
+
+// 动态注入全局样式
+const createHoverStyle = () => {
+  const styleId = "tag-hover-effect";
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = `
+      .multi-select-pill {
+        position: relative;
+        transition: background-color 0.2s;
+        overflow: hidden;
+      }
+      .multi-select-pill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: currentColor;
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+      }
+      .multi-select-pill:hover::after {
+        opacity: ${HOVER_OPACITY};
+      }
+    `;
+    document.head.appendChild(style);
+  }
+};
+
+// 初始化样式注入
+createHoverStyle();
 
 function createPathMatcher(conditionPath: string[]) {
   return (elementPath: string[]) => {
@@ -51,7 +87,7 @@ export default function styleChanger(
     const elementPath = rawText.split("/").map((s) => s.trim());
     let targetStyle: StyleMapping | null = null;
 
-    // 使用反向查找保留最后一个匹配项（与原始实现行为一致）
+    // 使用反向查找保留最后一个匹配项
     for (let i = conditionMatchers.length - 1; i >= 0; i--) {
       if (conditionMatchers[i].match(elementPath)) {
         targetStyle = conditionMatchers[i].style;
@@ -60,9 +96,12 @@ export default function styleChanger(
     }
 
     if (targetStyle) {
-      // 应用父元素样式
+      // 设置基础样式
       element.style.color = targetStyle.fontColor;
       element.style.backgroundColor = targetStyle.backColor;
+
+      // 设置 CSS 变量供伪元素使用
+      element.style.setProperty("--hover-color", targetStyle.fontColor);
 
       // 同步删除按钮颜色
       const removeBtn = element.querySelector<HTMLElement>(
