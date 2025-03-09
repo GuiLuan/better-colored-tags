@@ -7,7 +7,7 @@ type StyleMapping = {
 };
 
 const REMOVE_BUTTON_CLASS = "multi-select-pill-remove-button";
-const HOVER_OPACITY = 0.05; // 悬停高亮透明度
+const HOVER_OPACITY = 0.15; // 悬停高亮透明度
 
 // 动态注入全局样式
 const createHoverStyle = () => {
