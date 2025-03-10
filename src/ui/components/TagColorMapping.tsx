@@ -27,14 +27,14 @@ export default function TagColorMapping({
   );
 }
 
-interface TagColorMappingDataType {
+interface TagColorMappingData {
   id: string;
   fontColor: string;
   backColor: string;
   text: string;
 }
 
-interface TagColorMappingProps extends TagColorMappingDataType {
+interface TagColorMappingProps extends TagColorMappingData {
   style: React.CSSProperties;
   onFontColorChange: (color: string) => void;
   onBackColorChange: (color: string) => void;
@@ -51,4 +51,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export type { TagColorMappingDataType };
+export type { TagColorMappingData };

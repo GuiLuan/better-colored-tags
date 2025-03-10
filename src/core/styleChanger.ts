@@ -1,13 +1,13 @@
-import type { TagColorMappingDataType } from "ui/components/TagColorMapping";
-import BASE_SELECTORS from "./selectors";
+import type { TagColorMappingData } from "ui/components/TagColorMapping";
 
-type StyleMapping = {
-  fontColor: string;
-  backColor: string;
+const TAGS_SELECTORS = [
+  "[data-property-key='tags'] div.multi-select-pill-content",
+]; // 被选择的标签
+
+type TagStyle = {
+  fontColor: string; // 字体颜色
+  backColor: string; // 背景颜色
 };
-
-const REMOVE_BUTTON_CLASS = "multi-select-pill-remove-button";
-const HOVER_OPACITY = 0.15; // 悬停高亮透明度
 
 // 动态注入全局样式
 const createHoverStyle = () => {
@@ -34,7 +34,7 @@ const createHoverStyle = () => {
         pointer-events: none;
       }
       .multi-select-pill:hover::after {
-        opacity: ${HOVER_OPACITY};
+        opacity: 0.15;
       }
     `;
     document.head.appendChild(style);
@@ -56,7 +56,7 @@ function createPathMatcher(conditionPath: string[]) {
 
 export default function styleChanger(
   dom: Document | HTMLElement,
-  conditions: TagColorMappingDataType[]
+  conditions: TagColorMappingData[]
 ): void {
   // 预处理条件为路径匹配器 + 样式对
   const conditionMatchers = conditions.flatMap((condition) => {
@@ -77,7 +77,7 @@ export default function styleChanger(
   });
 
   // 处理所有目标元素
-  const elements = dom.querySelectorAll<HTMLElement>(BASE_SELECTORS.join(", "));
+  const elements = dom.querySelectorAll<HTMLElement>(TAGS_SELECTORS.join(", "));
 
   elements.forEach((element) => {
     const rawText = element.textContent?.replace(/#/g, "").trim();
@@ -85,7 +85,7 @@ export default function styleChanger(
 
     // 生成元素的层级路径
     const elementPath = rawText.split("/").map((s) => s.trim());
-    let targetStyle: StyleMapping | null = null;
+    let targetStyle: TagStyle | null = null;
 
     // 使用反向查找保留最后一个匹配项
     for (let i = conditionMatchers.length - 1; i >= 0; i--) {
@@ -105,7 +105,7 @@ export default function styleChanger(
 
       // 同步删除按钮颜色
       const removeBtn = element.querySelector<HTMLElement>(
-        `.${REMOVE_BUTTON_CLASS}`
+        ".multi-select-pill-remove-button"
       );
       removeBtn && (removeBtn.style.color = targetStyle.fontColor);
     }

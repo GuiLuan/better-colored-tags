@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import { IoAddCircleOutline } from "react-icons/io5";
 
 import { Button, TagColorMapping } from "ui/components";
-import type { TagColorMappingDataType } from "ui/components/TagColorMapping";
+import type { TagColorMappingData } from "ui/components/TagColorMapping";
 
 export default function SettingPage({
   readSetting,
@@ -58,14 +58,14 @@ export default function SettingPage({
             <TagColorMapping
               key={map.id}
               style={styles.listItem}
-              {...(map as TagColorMappingDataType)}
+              {...(map as TagColorMappingData)}
               onFontColorChange={(color: string) => {
                 dispatchSetting({
                   type: "update",
                   writeSetting: writeSetting,
                   payload: {
                     updateMap: {
-                      ...(map as TagColorMappingDataType),
+                      ...(map as TagColorMappingData),
                       fontColor: color,
                     },
                   },
@@ -77,7 +77,7 @@ export default function SettingPage({
                   writeSetting: writeSetting,
                   payload: {
                     updateMap: {
-                      ...(map as TagColorMappingDataType),
+                      ...(map as TagColorMappingData),
                       backColor: color,
                     },
                   },
@@ -89,7 +89,7 @@ export default function SettingPage({
                   writeSetting: writeSetting,
                   payload: {
                     updateMap: {
-                      ...(map as TagColorMappingDataType),
+                      ...(map as TagColorMappingData),
                       text: text,
                     },
                   },
@@ -118,7 +118,7 @@ interface SettingPageProps {
 }
 
 export interface SettingDataType {
-  maps: Array<TagColorMappingDataType | Record<string, never>>;
+  maps: Array<TagColorMappingData | Record<string, never>>;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -190,20 +190,20 @@ interface ReadAction extends BaseAction {
 interface AddAction extends BaseAction {
   type: "add";
   payload: {
-    addMap: TagColorMappingDataType;
+    addMap: TagColorMappingData;
   };
 }
 
 interface DelAction extends BaseAction {
   type: "delete";
   payload: {
-    delMapId: TagColorMappingDataType["id"];
+    delMapId: TagColorMappingData["id"];
   };
 }
 
 interface UpdateAction extends BaseAction {
   type: "update";
   payload: {
-    updateMap: TagColorMappingDataType;
+    updateMap: TagColorMappingData;
   };
 }

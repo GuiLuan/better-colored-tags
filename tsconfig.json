@@ -21,10 +21,12 @@
     "jsx": "react-jsx",
     "paths": {
       "*": ["*"]
-    }
+    },
+    "typeRoots": ["node_modules/@types", "node_modules/@testing-library"]
   },
   "include": [
     "**/*.ts",
-    "src/**/*"
-, "tests"  ]
+    "src/**/*",
+    "tests/**/*.ts"
+  ]
 }
