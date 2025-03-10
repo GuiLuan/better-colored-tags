@@ -70,7 +70,6 @@ export default function metadataStyleChanger(
     const pillContent = pill.querySelector<HTMLElement>(
       ".multi-select-pill-content"
     );
-    console.log(pillContent?.textContent);
     if (pillContent === undefined || pillContent === null) return;
     const targetStyle = handlePillContent(pillContent);
     if (targetStyle === undefined) return;
