@@ -1,8 +1,23 @@
-/*
+/* 为 metedata 栏的 tag 添加悬浮样式 */
+[data-property-key="tags"] div.multi-select-pill {
+  position: relative;
+  transition: background-color 0.2s;
+  overflow: hidden;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+[data-property-key="tags"] div.multi-select-pill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
 
-If your plugin does not need CSS, delete this file.
-
-*/
+[data-property-key="tags"] div.multi-select-pill:hover::after {
+  opacity: 0.15;
+}
